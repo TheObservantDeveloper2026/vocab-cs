@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#4f6ef7">
+<title>计算机英语术语背诵手册</title>
+<style>
+  :root {
+    --primary: #4f6ef7;
+    --primary-dark: #3b55d9;
+    --green: #22a06b;
+    --red: #e5484d;
+    --bg: #f4f6fb;
+    --card-bg: #ffffff;
+    --text: #1c2333;
+    --text-sub: #6b7280;
+    --radius: 18px;
+    --shadow: 0 10px 30px rgba(28, 35, 51, .10);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(160deg, #eef1fb 0%, #f7f8fc 55%, #eef4f2 100%);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  header {
+    padding: 14px 16px 8px;
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  h1 { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+  h1 small { color: var(--text-sub); font-weight: 500; font-size: 12px; margin-left: 8px; }
+  .toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  select, .btn-ghost {
+    appearance: none;
+    border: 1px solid #dfe3ee;
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+  }
+  select { min-width: 130px; }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+  .btn-ghost.active { border-color: var(--red); color: var(--red); background: #fef0f0; }
+  .badge {
+    display: inline-block;
+    min-width: 18px;
+    padding: 0 5px;
+    margin-left: 5px;
+    background: var(--red);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: center;
+  }
+  .stats { margin-left: auto; font-size: 13px; color: var(--text-sub); white-space: nowrap; }
+  .stats b { color: var(--green); }
+  .stats b.red { color: var(--red); }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px 8px;
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .progress-wrap { width: 100%; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  .progress-bar { flex: 1; height: 6px; background: #e4e8f4; border-radius: 3px; overflow: hidden; }
+  .progress-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--primary), #7c9bff); border-radius: 3px; transition: width .25s; }
+  .progress-num { font-size: 12px; color: var(--text-sub); white-space: nowrap; }
+
+  .scene { perspective: 1400px; width: 100%; max-width: 560px; }
+  .card {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    transform-style: preserve-3d;
+    transition: transform .45s cubic-bezier(.2,.7,.3,1);
+    cursor: pointer;
+  }
+  .card.flipped { transform: rotateY(180deg); }
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #c5cbe0 transparent;
+  }
+  .face::-webkit-scrollbar { width: 6px; }
+  .face::-webkit-scrollbar-thumb { background: #c5cbe0; border-radius: 3px; }
+  .face::-webkit-scrollbar-track { background: transparent; }
+  .face-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 24px;
+    text-align: center;
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+  }
+  .face.back { transform: rotateY(180deg); background: linear-gradient(150deg, #ffffff, #f6f8ff); }
+  .word {
+    font-size: clamp(30px, 7vw, 52px);
+    font-weight: 700;
+    word-break: break-word;
+    line-height: 1.2;
+  }
+  .word.zh { font-size: clamp(26px, 6vw, 42px); color: var(--primary-dark); font-weight: 600; }
+  .ipa {
+    margin-top: 10px;
+    font-size: clamp(15px, 3.5vw, 20px);
+    color: var(--text-sub);
+    font-weight: 400;
+    letter-spacing: .3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .speak-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: transform .12s, background .15s;
+  }
+  /* 隐藏时彻底移除布局（覆盖 inline-flex） */
+  .speak-btn[hidden] { display: none !important; }
+  .speak-btn svg { width: 20px; height: 20px; display: block; }
+  .face.back .speak-btn { margin-top: 14px; }
+  .speak-btn:hover { background: #eef1fb; }
+  .speak-btn:active { transform: scale(.92); }
+  .speak-btn.playing svg { animation: spk 1s ease-in-out infinite; }
+  @keyframes spk { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+  .hint { margin-top: 18px; font-size: 13px; color: var(--text-sub); }
+  .tag {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 11px;
+    color: var(--text-sub);
+    background: #eef1fb;
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+  .known-dot {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 11px;
+    border-radius: 999px;
+    padding: 3px 10px;
+    background: #e8f7f0;
+    color: var(--green);
+  }
+  .wrong-dot {
+    position: absolute;
+    top: 40px;
+    right: 16px;
+    font-size: 11px;
+    border-radius: 999px;
+    padding: 3px 10px;
+    background: #fdebec;
+    color: var(--red);
+  }
+  .pos { position: absolute; bottom: 12px; right: 16px; font-size: 11px; color: #b6bccb; }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 560px;
+  }
+  .actions button {
+    flex: 1;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 0;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    transition: transform .08s, filter .15s;
+  }
+  .actions button:active { transform: scale(.97); }
+  #btnUnknown { background: var(--red); }
+  #btnKnown { background: var(--green); }
+  #btnFlip { background: var(--primary); width: 100%; max-width: 560px; flex: none; }
+  .actions button[disabled] { opacity: .45; cursor: default; }
+
+  .done-panel { text-align: center; max-width: 480px; }
+  .done-panel h2 { font-size: 26px; margin-bottom: 10px; }
+  .done-panel p { color: var(--text-sub); font-size: 14px; line-height: 1.8; margin-bottom: 22px; }
+  .done-panel button {
+    display: block; width: 100%; margin-bottom: 10px;
+    border: none; border-radius: 14px; padding: 13px 0;
+    font-size: 15px; font-weight: 600; cursor: pointer; color: #fff;
+  }
+  #btnAgainUnknown { background: var(--primary); }
+  #btnRestart { background: #8a93a8; }
+
+  footer {
+    text-align: center;
+    font-size: 11px;
+    color: #b0b6c4;
+    padding: 10px 0 calc(12px + env(safe-area-inset-bottom));
+  }
+  kbd {
+    background:#fff;border:1px solid #dfe3ee;border-bottom-width:2px;border-radius:5px;
+    padding:1px 5px;font-size:11px;color:#5b6272;
+  }
+  @media (max-width: 480px) {
+    .card { height: 280px; }
+    .face-inner { padding: 22px 18px; }
+    .stats { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>计算机英语 <small>点击卡片 · 看英文想中文</small></h1>
+  <div class="toolbar">
+    <select id="groupSel"></select>
+    <button class="btn-ghost" id="btnShuffle">洗牌</button>
+    <button class="btn-ghost" id="btnWrongBook">错题本<span class="badge" id="wrongBadge">0</span></button>
+    <button class="btn-ghost" id="btnReset">清空进度</button>
+    <span class="stats" id="statsLine"></span>
+  </div>
+</header>
+
+<main>
+  <div class="progress-wrap">
+    <div class="progress-bar"><i id="progressFill"></i></div>
+    <span class="progress-num" id="progressNum">0 / 0</span>
+  </div>
+
+  <div class="scene" id="study">
+    <div class="card" id="card">
+      <div class="face front">
+        <div class="face-inner">
+          <span class="tag" id="tagFront"></span>
+          <span class="known-dot" id="knownDot" hidden>已掌握</span>
+          <span class="wrong-dot" id="wrongDot" hidden>错题</span>
+          <div class="word" id="wordFront"></div>
+          <div class="ipa" id="ipaFront" hidden>
+            <button class="speak-btn" id="speakFront" title="朗读" aria-label="朗读英语">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            </button>
+            <span id="ipaText"></span>
+          </div>
+          <div class="hint">想一想中文意思，点击卡片查看</div>
+          <span class="pos" id="posFront"></span>
+        </div>
+      </div>
+      <div class="face back">
+        <div class="face-inner">
+          <span class="tag" id="tagBack"></span>
+          <div class="word zh" id="wordBack"></div>
+          <div class="hint" id="enBack"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="done-panel" id="done" hidden>
+    <h2 id="doneTitle">本组完成 🎉</h2>
+    <p id="doneText"></p>
+    <button id="btnAgainUnknown">只复习未掌握的卡片</button>
+    <button id="btnRestart">重新开始本组</button>
+  </div>
+
+  <div class="actions" id="actions">
+    <button id="btnFlip">翻转卡片（空格）</button>
+    <button id="btnUnknown" hidden>不认识 ←</button>
+    <button id="btnKnown" hidden>认识 →</button>
+  </div>
+</main>
+
+<footer>计算机自学 · 英语术语手册 · 答错自动收录错题本 · 10 大模块覆盖 408 统考/面试/论文</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const DATA = [{"en": "variable", "zh": "变量<br>a local variable 局部变量；global variable 全局变量；scope 作用域", "group": "G01 编程语言与代码阅读", "ipa": "/vˈeəɹɪəbəl/", "audio": "audio/variable.mp3"}, {"en": "constant", "zh": "常量<br>a symbolic constant 符号常量", "group": "G01 编程语言与代码阅读", "ipa": "/kˈɒnstənt/", "audio": "audio/constant.mp3"}, {"en": "data type", "zh": "数据类型<br>primitive type 基本类型；user-defined type 用户自定义类型", "group": "G01 编程语言与代码阅读", "ipa": "/dˈeɪtə/ /tˈaɪp/", "audio": "audio/data_type.mp3"}, {"en": "declaration vs. definition", "zh": "声明 vs. 定义<br>declare 声明只告知类型，define 才分配空间", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/declaration_vs_definition.mp3"}, {"en": "assignment", "zh": "赋值<br>assignment operator 赋值运算符；chained assignment 链式赋值", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/assignment.mp3"}, {"en": "initialization", "zh": "初始化<br>initialize 初始化；zero-initialized 零初始化", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/initialization.mp3"}, {"en": "type conversion", "zh": "类型转换<br>implicit cast 隐式转换；explicit cast 显式转换", "group": "G01 编程语言与代码阅读", "ipa": "/tˈaɪp/", "audio": "audio/type_conversion.mp3"}, {"en": "overflow vs. underflow", "zh": "上溢 vs. 下溢<br>integer overflow 整数溢出", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/overflow_vs_underflow.mp3"}, {"en": "integer division", "zh": "整除<br>a / b yields integer division", "group": "G01 编程语言与代码阅读", "ipa": "/dɪvˈɪʒən/", "audio": "audio/integer_division.mp3"}, {"en": "truncation", "zh": "截断<br>float to int truncation 浮点转整数的截断", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/truncation.mp3"}, {"en": "literal", "zh": "字面量<br>integer literal 整型字面量；string literal 字符串字面量", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/literal.mp3"}, {"en": "identifier", "zh": "标识符<br>a valid identifier 合法的标识符", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/identifier.mp3"}, {"en": "branch", "zh": "分支<br>a conditional branch 条件分支；branch prediction 分支预测", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/branch.mp3"}, {"en": "loop", "zh": "循环<br>nested loop 嵌套循环；loop invariant 循环不变量", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/loop.mp3"}, {"en": "recursion", "zh": "递归<br>recursive call 递归调用；base case 递归终止条件", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/recursion.mp3"}, {"en": "iterate / iteration", "zh": "迭代<br>iterate over 遍历；iterator 迭代器", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/iterate_iteration.mp3"}, {"en": "jump / goto", "zh": "跳转<br>unconditional jump 无条件跳转", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/jump_goto.mp3"}, {"en": "terminate", "zh": "终止<br>terminate the program 终止程序", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/terminate.mp3"}, {"en": "function / subroutine", "zh": "函数 / 子程序<br>call a function 调用函数", "group": "G01 编程语言与代码阅读", "ipa": "/fˈʌŋkʃən/", "audio": "audio/function_subroutine.mp3"}, {"en": "argument vs. parameter", "zh": "实参 vs. 形参<br>pass by value 按值传参；pass by reference 按引用传参", "group": "G01 编程语言与代码阅读", "ipa": "/ˈɑːɡjuːmənt/", "audio": "audio/argument_vs_parameter.mp3"}, {"en": "return value", "zh": "返回值<br>return -1 on error 出错返回 -1", "group": "G01 编程语言与代码阅读", "ipa": "/vˈæljuː/", "audio": "audio/return_value.mp3"}, {"en": "void", "zh": "空 / 无返回值<br>a void function 无返回值函数", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/void.mp3"}, {"en": "side effect", "zh": "副作用<br>a function with side effects 有副作用的函数", "group": "G01 编程语言与代码阅读", "ipa": "/sˈaɪd/ /ɪfˈɛkt/", "audio": "audio/side_effect.mp3"}, {"en": "pointer / address-of operator", "zh": "指针 / 取地址符<br>& 取地址，* 解引用 dereference", "group": "G01 编程语言与代码阅读", "ipa": "/ˈæˌdɹɛs/ /ˈɒv/", "audio": "audio/pointer_address_of_operator.mp3"}, {"en": "dereference", "zh": "解引用<br>dereference a pointer 解引用指针", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/dereference.mp3"}, {"en": "array vs. linked list", "zh": "数组 vs. 链表<br>contiguous memory 连续内存", "group": "G01 编程语言与代码阅读", "ipa": "/lˈɪst/", "audio": "audio/array_vs_linked_list.mp3"}, {"en": "struct / record", "zh": "结构体 / 记录<br>a struct member 结构体成员", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/struct_record.mp3"}, {"en": "union", "zh": "联合体<br>share the same memory 共享同一块内存", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/union.mp3"}, {"en": "bit field", "zh": "位域<br>bit-packed field 位打包字段", "group": "G01 编程语言与代码阅读", "ipa": "/bˈɪt/", "audio": "audio/bit_field.mp3"}, {"en": "pointer arithmetic", "zh": "指针运算<br>p + 1 前进一个元素", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/pointer_arithmetic.mp3"}, {"en": "memory leak", "zh": "内存泄漏<br>leak memory 泄漏内存；free / delete 释放", "group": "G01 编程语言与代码阅读", "ipa": "/mˈɛməɹˌi/ /lˈiːk/", "audio": "audio/memory_leak.mp3"}, {"en": "segmentation fault", "zh": "段错误<br>access invalid memory 访问非法内存", "group": "G01 编程语言与代码阅读", "ipa": "/fˈɒlt/", "audio": "audio/segmentation_fault.mp3"}, {"en": "header file / library", "zh": "头文件 / 库<br>#include；link against a library 链接库", "group": "G01 编程语言与代码阅读", "ipa": "/ˈfaɪɫ/", "audio": "audio/header_file_library.mp3"}, {"en": "object-oriented (OOP)", "zh": "面向对象<br>encapsulation / inheritance / polymorphism 三大特性", "group": "G01 编程语言与代码阅读", "ipa": "/ˈɑbdʒɛkt/ /ˈɔːɹiəntɪd/ /oʊ oʊ piː/", "audio": "audio/object_oriented_oop.mp3"}, {"en": "inheritance / override / overload", "zh": "继承 / 重写 / 重载<br>override 运行时多态；overload 编译期多态", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/inheritance_override_overload.mp3"}, {"en": "interface / abstract class", "zh": "接口 / 抽象类<br>a class implements an interface 类实现接口", "group": "G01 编程语言与代码阅读", "ipa": "/ˈɪntəfˌeɪs/ /ˈæbˌstɹækt/ /klˈɑːs/", "audio": "audio/interface_abstract_class.mp3"}, {"en": "exception handling", "zh": "异常处理<br>throw / try / catch / finally", "group": "G01 编程语言与代码阅读", "ipa": "/ɛksˈɛpʃən/", "audio": "audio/exception_handling.mp3"}, {"en": "garbage collection", "zh": "垃圾回收<br>garbage collector 垃圾收集器", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/garbage_collection.mp3"}, {"en": "list comprehension", "zh": "列表推导式<br>a Python list comprehension", "group": "G01 编程语言与代码阅读", "ipa": "/lˈɪst/", "audio": "audio/list_comprehension.mp3"}, {"en": "slicing", "zh": "切片<br>a[1:5] 取下标 1~4 的子序列", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/slicing.mp3"}, {"en": "mutable / immutable", "zh": "可变 / 不可变<br>strings are immutable in Python", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/mutable_immutable.mp3"}, {"en": "dynamic typing / static typing", "zh": "动态类型 / 静态类型<br>duck typing 鸭子类型", "group": "G01 编程语言与代码阅读", "ipa": "/daɪnˈæmɪk/ /stˈætɪk/", "audio": "audio/dynamic_typing_static_typing.mp3"}, {"en": "idempotent", "zh": "幂等的<br>an idempotent operation 幂等操作", "group": "G01 编程语言与代码阅读", "ipa": "", "audio": "audio/idempotent.mp3"}, {"en": "linear data structure", "zh": "线性数据结构<br>array, linked list, stack, queue", "group": "G02 数据结构与算法", "ipa": "/dˈeɪtə/ /stɹˈʌktʃə/", "audio": "audio/linear_data_structure.mp3"}, {"en": "stack", "zh": "栈<br>LIFO 后进先出；push / pop", "group": "G02 数据结构与算法", "ipa": "/stˈæk/", "audio": "audio/stack.mp3"}, {"en": "queue", "zh": "队列<br>FIFO 先进先出；enqueue / dequeue", "group": "G02 数据结构与算法", "ipa": "/kjˈuː/", "audio": "audio/queue.mp3"}, {"en": "circular queue", "zh": "循环队列<br>wrap around 回绕", "group": "G02 数据结构与算法", "ipa": "/sˈɜːkjʊlə/ /kjˈuː/", "audio": "audio/circular_queue.mp3"}, {"en": "deque", "zh": "双端队列 double-ended queue<br>两端可插入删除", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/deque.mp3"}, {"en": "priority queue", "zh": "优先队列<br>implemented by a heap 用堆实现", "group": "G02 数据结构与算法", "ipa": "/pɹaɪˈɒɹɪti/ /kjˈuː/", "audio": "audio/priority_queue.mp3"}, {"en": "linked list", "zh": "链表<br>singly / doubly linked list 单/双向链表", "group": "G02 数据结构与算法", "ipa": "/lˈɪst/", "audio": "audio/linked_list.mp3"}, {"en": "head / tail node", "zh": "头结点 / 尾结点<br>NULL-terminated list 空指针结尾", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/head_tail_node.mp3"}, {"en": "tree", "zh": "树<br>root 根；leaf 叶子；height 高度；depth 深度", "group": "G02 数据结构与算法", "ipa": "/tɹˈiː/", "audio": "audio/tree.mp3"}, {"en": "binary tree / BST", "zh": "二叉树 / 二叉搜索树<br>inorder traversal 中序遍历", "group": "G02 数据结构与算法", "ipa": "/tɹˈiː/ /biː es tiː/", "audio": "audio/binary_tree_bst.mp3"}, {"en": "balanced tree", "zh": "平衡树<br>AVL / red-black tree 红黑树", "group": "G02 数据结构与算法", "ipa": "/tɹˈiː/", "audio": "audio/balanced_tree.mp3"}, {"en": "heap", "zh": "堆<br>min-heap / max-heap 最小/最大堆", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/heap.mp3"}, {"en": "graph", "zh": "图<br>vertex 顶点；edge 边；adjacency matrix 邻接矩阵", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/graph.mp3"}, {"en": "spanning tree", "zh": "生成树<br>minimum spanning tree (MST) 最小生成树", "group": "G02 数据结构与算法", "ipa": "/spˈænɪŋ/ /tɹˈiː/", "audio": "audio/spanning_tree.mp3"}, {"en": "trie / prefix tree", "zh": "字典树 / 前缀树<br>prefix matching 前缀匹配", "group": "G02 数据结构与算法", "ipa": "/tɹˈiː/", "audio": "audio/trie_prefix_tree.mp3"}, {"en": "hash table", "zh": "哈希表<br>hash function 哈希函数；collision 冲突", "group": "G02 数据结构与算法", "ipa": "/tˈeɪbəl/", "audio": "audio/hash_table.mp3"}, {"en": "traverse", "zh": "遍历<br>in-order / pre-order / post-order 中序/前序/后序", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/traverse.mp3"}, {"en": "breadth-first search (BFS)", "zh": "广度优先搜索<br>level-order 层序", "group": "G02 数据结构与算法", "ipa": "/fˈɜːst/ /sˈɜːtʃ/ /biː ef es/", "audio": "audio/breadth_first_search_bfs.mp3"}, {"en": "depth-first search (DFS)", "zh": "深度优先搜索", "group": "G02 数据结构与算法", "ipa": "/fˈɜːst/ /sˈɜːtʃ/ /diː ef es/", "audio": "audio/depth_first_search_dfs.mp3"}, {"en": "time complexity", "zh": "时间复杂度<br>O(n), O(log n), O(1) 常数阶", "group": "G02 数据结构与算法", "ipa": "/tˈaɪm/", "audio": "audio/time_complexity.mp3"}, {"en": "space complexity", "zh": "空间复杂度<br>auxiliary space 辅助空间", "group": "G02 数据结构与算法", "ipa": "/spˈeɪs/", "audio": "audio/space_complexity.mp3"}, {"en": "worst / best / average case", "zh": "最坏 / 最好 / 平均情况<br>worst-case complexity", "group": "G02 数据结构与算法", "ipa": "/bˈɛst/ /ˈævɹɪdʒ/ /kˈeɪs/", "audio": "audio/worst_best_average_case.mp3"}, {"en": "big-O notation", "zh": "大 O 表示法<br>asymptotic analysis 渐进分析", "group": "G02 数据结构与算法", "ipa": "/bˈɪɡ/", "audio": "audio/big_o_notation.mp3"}, {"en": "amortized analysis", "zh": "均摊分析<br>amortized cost 均摊代价", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/amortized_analysis.mp3"}, {"en": "divide and conquer", "zh": "分治法<br>divide the problem and conquer 划分并解决", "group": "G02 数据结构与算法", "ipa": "/dɪvˈaɪd/ /ˈænd/ /kˈɒnkə/", "audio": "audio/divide_and_conquer.mp3"}, {"en": "dynamic programming", "zh": "动态规划<br>overlapping subproblems 重叠子问题；optimal substructure 最优子结构", "group": "G02 数据结构与算法", "ipa": "/daɪnˈæmɪk/", "audio": "audio/dynamic_programming.mp3"}, {"en": "greedy algorithm", "zh": "贪心算法<br>choose the best local choice 每次选局部最优", "group": "G02 数据结构与算法", "ipa": "/ɡɹˈiːdi/", "audio": "audio/greedy_algorithm.mp3"}, {"en": "recursion / backtracking", "zh": "递归 / 回溯<br>prune the search tree 剪枝", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/recursion_backtracking.mp3"}, {"en": "two-pointer technique", "zh": "双指针技巧<br>linear time O(n)", "group": "G02 数据结构与算法", "ipa": "/tˈuː/", "audio": "audio/two_pointer_technique.mp3"}, {"en": "sliding window", "zh": "滑动窗口<br>maintain a window 维护窗口", "group": "G02 数据结构与算法", "ipa": "/slˈaɪdɪŋ/ /wˈɪndəʊ/", "audio": "audio/sliding_window.mp3"}, {"en": "binary search", "zh": "二分查找<br>prerequisites: sorted array 前提：已排序", "group": "G02 数据结构与算法", "ipa": "/sˈɜːtʃ/", "audio": "audio/binary_search.mp3"}, {"en": "bubble / insertion / selection sort", "zh": "冒泡 / 插入 / 选择排序<br>in-place 原地；stable 稳定", "group": "G02 数据结构与算法", "ipa": "/sɪlˈɛkʃən/", "audio": "audio/bubble_insertion_selection_sort.mp3"}, {"en": "quick sort / merge sort / heap sort", "zh": "快排 / 归并 / 堆排序<br>quick sort is in-place 快排是原地的", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/quick_sort_merge_sort_heap_sort.mp3"}, {"en": "hash function / collision", "zh": "哈希函数 / 冲突<br>separate chaining 链地址法；open addressing 开放寻址", "group": "G02 数据结构与算法", "ipa": "/fˈʌŋkʃən/ /kəlˈɪʒən/", "audio": "audio/hash_function_collision.mp3"}, {"en": "complexity vs. readability", "zh": "复杂度 vs. 可读性<br>a trade-off 取舍", "group": "G02 数据结构与算法", "ipa": "", "audio": "audio/complexity_vs_readability.mp3"}, {"en": "in-place", "zh": "原地<br>modify the input directly", "group": "G02 数据结构与算法", "ipa": "/ˈɪn/ /plˈeɪs/", "audio": "audio/in_place.mp3"}, {"en": "stable sort", "zh": "稳定排序<br>preserve relative order of equal elements", "group": "G02 数据结构与算法", "ipa": "/stˈeɪbəl/", "audio": "audio/stable_sort.mp3"}, {"en": "process / thread", "zh": "进程 / 线程<br>the current process 当前进程；spawn a process 创建进程", "group": "G03 操作系统", "ipa": "/ˈpɹɑˌsɛs/", "audio": "audio/process_thread.mp3"}, {"en": "program vs. process", "zh": "程序 vs. 进程<br>a program is a passive file 程序是静态文件", "group": "G03 操作系统", "ipa": "/pɹˈəʊɡɹæm/ /ˈpɹɑˌsɛs/", "audio": "audio/program_vs_process.mp3"}, {"en": "context switch", "zh": "上下文切换<br>context switch overhead 上下文切换开销", "group": "G03 操作系统", "ipa": "/kˈɒntɛkst/ /swˈɪtʃ/", "audio": "audio/context_switch.mp3"}, {"en": "PCB (process control block)", "zh": "进程控制块<br>store the process state 保存进程状态", "group": "G03 操作系统", "ipa": "/piː siː biː/ /ˈpɹɑˌsɛs/ /kəntɹˈəʊl/", "audio": "audio/pcb_process_control_block.mp3"}, {"en": "scheduler / dispatch", "zh": "调度器 / 分派<br>schedule a process 调度进程", "group": "G03 操作系统", "ipa": "/dɪspˈætʃ/", "audio": "audio/scheduler_dispatch.mp3"}, {"en": "preemptive / non-preemptive", "zh": "抢占式 / 非抢占式<br>preemptive multitasking 抢占式多任务", "group": "G03 操作系统", "ipa": "", "audio": "audio/preemptive_non_preemptive.mp3"}, {"en": "blocking / wake up", "zh": "阻塞 / 唤醒<br>blocked on I/O 阻塞在 I/O 上", "group": "G03 操作系统", "ipa": "/wˈeɪk/ /ˈʌp/", "audio": "audio/blocking_wake_up.mp3"}, {"en": "semaphore / mutex / monitor", "zh": "信号量 / 互斥锁 / 管程<br>acquire / release 获取 / 释放", "group": "G03 操作系统", "ipa": "/mˈɒnɪtə/", "audio": "audio/semaphore_mutex_monitor.mp3"}, {"en": "race condition", "zh": "竞争条件<br>a race condition occurs 发生竞争", "group": "G03 操作系统", "ipa": "/kəndˈɪʃən/", "audio": "audio/race_condition.mp3"}, {"en": "deadlock / livelock / starvation", "zh": "死锁 / 活锁 / 饥饿<br>detect and avoid deadlock", "group": "G03 操作系统", "ipa": "", "audio": "audio/deadlock_livelock_starvation.mp3"}, {"en": "synchronization", "zh": "同步<br>mutual exclusion 互斥；synchronize access 同步访问", "group": "G03 操作系统", "ipa": "", "audio": "audio/synchronization.mp3"}, {"en": "thread-safe", "zh": "线程安全的<br>multi-threading 多线程", "group": "G03 操作系统", "ipa": "", "audio": "audio/thread_safe.mp3"}, {"en": "fork / exec / join", "zh": "创建 / 执行 / 等待<br>POSIX 接口 fork-exec 模型", "group": "G03 操作系统", "ipa": "", "audio": "audio/fork_exec_join.mp3"}, {"en": "daemon / orphan / zombie process", "zh": "守护 / 孤立 / 僵尸进程<br>zombie 已终止未被回收", "group": "G03 操作系统", "ipa": "/ˈpɹɑˌsɛs/", "audio": "audio/daemon_orphan_zombie_process.mp3"}, {"en": "virtual memory", "zh": "虚拟内存<br>virtual address space 虚拟地址空间", "group": "G03 操作系统", "ipa": "/vˈɜːtʃuːəl/ /mˈɛməɹˌi/", "audio": "audio/virtual_memory.mp3"}, {"en": "page / page frame / page table", "zh": "页 / 页框 / 页表<br>page fault 缺页异常", "group": "G03 操作系统", "ipa": "/fɹˈeɪm/ /tˈeɪbəl/", "audio": "audio/page_page_frame_page_table.mp3"}, {"en": "paging vs. segmentation", "zh": "分页 vs. 分段<br>variable-size segments 变长分段", "group": "G03 操作系统", "ipa": "", "audio": "audio/paging_vs_segmentation.mp3"}, {"en": "demand paging", "zh": "请求分页<br>load on demand 按需调入", "group": "G03 操作系统", "ipa": "/dɪmˈɑːnd/", "audio": "audio/demand_paging.mp3"}, {"en": "TLB (translation lookaside buffer)", "zh": "快表<br>a TLB hit 快表命中", "group": "G03 操作系统", "ipa": "/tiː el biː/", "audio": "audio/tlb_translation_lookaside_buffer.mp3"}, {"en": "allocation strategy", "zh": "分配策略<br>first fit / best fit / worst fit 首次/最佳/最差适应", "group": "G03 操作系统", "ipa": "", "audio": "audio/allocation_strategy.mp3"}, {"en": "fragmentation (internal / external)", "zh": "内/外碎片<br>suffer from fragmentation", "group": "G03 操作系统", "ipa": "/ɛkstˈɜːnəl/", "audio": "audio/fragmentation_internal_external.mp3"}, {"en": "swap / thrashing", "zh": "交换 / 抖动<br>swap out 换出；thrashing due to over-paging", "group": "G03 操作系统", "ipa": "", "audio": "audio/swap_thrashing.mp3"}, {"en": "cache / hit rate", "zh": "缓存 / 命中率<br>a high cache hit rate 高缓存命中率", "group": "G03 操作系统", "ipa": "/ɹˈeɪt/", "audio": "audio/cache_hit_rate.mp3"}, {"en": "locality of reference", "zh": "访问局部性<br>spatial / temporal locality 空间/时间局部性", "group": "G03 操作系统", "ipa": "/ˈɒv/ /ɹˈɛfɹəns/", "audio": "audio/locality_of_reference.mp3"}, {"en": "dangling pointer", "zh": "悬垂指针<br>free memory properly 正确释放内存", "group": "G03 操作系统", "ipa": "", "audio": "audio/dangling_pointer.mp3"}, {"en": "write-back vs. write-through", "zh": "写回 vs. 直写<br>cache consistency 缓存一致性", "group": "G03 操作系统", "ipa": "/ɹˈaɪt/ /bˈæk/ /ɹˈaɪt/ /θɹˈuː/", "audio": "audio/write_back_vs_write_through.mp3"}, {"en": "zero-copy", "zh": "零拷贝<br>avoid copying data 避免数据拷贝", "group": "G03 操作系统", "ipa": "", "audio": "audio/zero_copy.mp3"}, {"en": "memory mapping (mmap)", "zh": "内存映射<br>memory-mapped file 内存映射文件", "group": "G03 操作系统", "ipa": "/mˈɛməɹˌi/", "audio": "audio/memory_mapping_mmap.mp3"}, {"en": "kernel", "zh": "内核<br>kernel space / user space 内核态/用户态", "group": "G03 操作系统", "ipa": "", "audio": "audio/kernel.mp3"}, {"en": "interrupt / trap / system call", "zh": "中断 / 陷入 / 系统调用", "group": "G03 操作系统", "ipa": "/tɹˈæp/ /kˈɔːl/", "audio": "audio/interrupt_trap_system_call.mp3"}, {"en": "layer / protocol stack", "zh": "层 / 协议栈<br>the OSI seven-layer model 七层模型", "group": "G04 计算机网络", "ipa": "/ˈɫeɪɝ/ /pɹˈəʊtəkˌɒl/ /stˈæk/", "audio": "audio/layer_protocol_stack.mp3"}, {"en": "encapsulation / decapsulation", "zh": "封装 / 解封装<br>encapsulate a payload 封装载荷", "group": "G04 计算机网络", "ipa": "/ɛnkˌæpsuːlˈeɪʃən/", "audio": "audio/encapsulation_decapsulation.mp3"}, {"en": "PDU (protocol data unit)", "zh": "协议数据单元<br>bits / frames / packets / segments 比特/帧/包/段", "group": "G04 计算机网络", "ipa": "/piː diː juː/ /pɹˈəʊtəkˌɒl/ /dˈeɪtə/", "audio": "audio/pdu_protocol_data_unit.mp3"}, {"en": "sender / receiver / intermediary", "zh": "发送方 / 接收方 / 中间节点<br>hop 跳", "group": "G04 计算机网络", "ipa": "", "audio": "audio/sender_receiver_intermediary.mp3"}, {"en": "bandwidth / throughput / latency", "zh": "带宽 / 吞吐量 / 时延<br>bandwidth-delay product", "group": "G04 计算机网络", "ipa": "/bˈændwɪdθ/ /θɹˈuːpʊt/ /lˈeɪtnsi/", "audio": "audio/bandwidth_throughput_latency.mp3"}, {"en": "connection-oriented / connectionless", "zh": "面向连接 / 无连接<br>establish a connection 建立连接", "group": "G04 计算机网络", "ipa": "/kənˈɛkʃən/ /ˈɔːɹiəntɪd/", "audio": "audio/connection_oriented_connectionless.mp3"}, {"en": "reliable / unreliable", "zh": "可靠 / 不可靠<br>best-effort delivery 尽力而为投递", "group": "G04 计算机网络", "ipa": "/ɹɪlˈaɪəbəl/ /ˌʌnɹɪlˈaɪəbəl/", "audio": "audio/reliable_unreliable.mp3"}, {"en": "multiplexing / demultiplexing", "zh": "多路复用 / 分用<br>time-division multiplexing 时分复用", "group": "G04 计算机网络", "ipa": "", "audio": "audio/multiplexing_demultiplexing.mp3"}, {"en": "three-way handshake", "zh": "三次握手<br>SYN, SYN-ACK, ACK", "group": "G04 计算机网络", "ipa": "/θɹˈiː/ /wˈeɪ/ /hˈændʃeɪk/", "audio": "audio/three_way_handshake.mp3"}, {"en": "four-way teardown", "zh": "四次挥手<br>FIN, FIN-ACK 关闭连接", "group": "G04 计算机网络", "ipa": "/wˈeɪ/", "audio": "audio/four_way_teardown.mp3"}, {"en": "flow control", "zh": "流量控制<br>sliding window 滑动窗口", "group": "G04 计算机网络", "ipa": "/flˈəʊ/ /kəntɹˈəʊl/", "audio": "audio/flow_control.mp3"}, {"en": "congestion control", "zh": "拥塞控制<br>slow start 慢启动；congestion avoidance 拥塞避免", "group": "G04 计算机网络", "ipa": "/kəndʒˈɛstʃən/ /kəntɹˈəʊl/", "audio": "audio/congestion_control.mp3"}, {"en": "retransmission timeout (RTO)", "zh": "重传超时<br>fast retransmit 快重传", "group": "G04 计算机网络", "ipa": "/ˌɹitɹænzˈmɪʃən/ /tˈaɪmaʊt/ /ɑːr tiː oʊ/", "audio": "audio/retransmission_timeout_rto.mp3"}, {"en": "URL (uniform resource locator)", "zh": "统一资源定位符<br>resolve a URL 解析 URL", "group": "G04 计算机网络", "ipa": "/ˈʊɹɫ/ /jˈuːnɪfˌɔːm/ /ɹɪzˈɔːs/", "audio": "audio/url_uniform_resource_locator.mp3"}, {"en": "URI / URL / URN", "zh": "统一资源标识符 / 定位符 / 名称<br>a relative URL", "group": "G04 计算机网络", "ipa": "/ˈjɝi/ /ˈʊɹɫ/ /juː ɑːr en/", "audio": "audio/uri_url_urn.mp3"}, {"en": "HTTP request / response", "zh": "HTTP 请求 / 响应<br>GET/POST/PUT/DELETE 方法", "group": "G04 计算机网络", "ipa": "/ˌeɪtʃˌtiˌtiˈpi/ /ɹɪkwˈɛst/ /ɹɪspˈɒns/", "audio": "audio/http_request_response.mp3"}, {"en": "status code", "zh": "状态码<br>200 OK；404 Not Found；500 Internal Server Error", "group": "G04 计算机网络", "ipa": "/stˈeɪtəs/ /kˈəʊd/", "audio": "audio/status_code.mp3"}, {"en": "header / body / cookie", "zh": "报头 / 报体 / Cookie<br>a request header 请求头", "group": "G04 计算机网络", "ipa": "", "audio": "audio/header_body_cookie.mp3"}, {"en": "DNS resolution", "zh": "域名解析<br>a DNS record 资源记录（A/MX/CNAME）", "group": "G04 计算机网络", "ipa": "/ˌdiˌɛˈnɛs/", "audio": "audio/dns_resolution.mp3"}, {"en": "TLS handshake", "zh": "TLS 握手<br>certificate validation 证书校验", "group": "G04 计算机网络", "ipa": "/tiː el es/ /hˈændʃeɪk/", "audio": "audio/tls_handshake.mp3"}, {"en": "proxy / reverse proxy / gateway", "zh": "代理 / 反向代理 / 网关<br>a caching proxy 缓存代理", "group": "G04 计算机网络", "ipa": "/pɹˈɒksi/ /ɹɪvˈɜːs/ /pɹˈɒksi/", "audio": "audio/proxy_reverse_proxy_gateway.mp3"}, {"en": "CDN", "zh": "内容分发网络<br>serve content from edge nodes", "group": "G04 计算机网络", "ipa": "/siː diː en/", "audio": "audio/cdn.mp3"}, {"en": "load balancing", "zh": "负载均衡<br>round robin 轮询；least connection 最少连接", "group": "G04 计算机网络", "ipa": "/lˈəʊd/ /bˈælənsɪŋ/", "audio": "audio/load_balancing.mp3"}, {"en": "WebSocket", "zh": "WebSocket<br>persistent bidirectional connection", "group": "G04 计算机网络", "ipa": "", "audio": "audio/websocket.mp3"}, {"en": "RESTful API", "zh": "REST 风格接口<br>idempotent operations 幂等操作", "group": "G04 计算机网络", "ipa": "/ˌeɪˌpiˈaɪ/", "audio": "audio/restful_api.mp3"}, {"en": "serialization / deserialization", "zh": "序列化 / 反序列化<br>serialize an object 序列化对象", "group": "G04 计算机网络", "ipa": "", "audio": "audio/serialization_deserialization.mp3"}, {"en": "packet loss", "zh": "丢包<br>round-trip time (RTT) 往返时延", "group": "G04 计算机网络", "ipa": "/pˈækɪt/ /lˈɒs/", "audio": "audio/packet_loss.mp3"}, {"en": "firewall", "zh": "防火墙<br>packet filtering 包过滤", "group": "G04 计算机网络", "ipa": "/fˈaɪəwɔːl/", "audio": "audio/firewall.mp3"}, {"en": "NAT (network address translation)", "zh": "网络地址转换", "group": "G04 计算机网络", "ipa": "/ˈnæt/ /nˈɛtwɜːk/ /ˈæˌdɹɛs/", "audio": "audio/nat_network_address_translation.mp3"}, {"en": "SELECT / FROM / WHERE", "zh": "查询 / 从… / 条件<br>SELECT * FROM users WHERE age > 18;", "group": "G05 数据库", "ipa": "/sɪlˈɛkt/ /fɹˈɒm/ /ˈdʌbəljuː eɪtʃ iː ɑːr iː/", "audio": "audio/select_from_where.mp3"}, {"en": "INSERT INTO ... VALUES", "zh": "插入<br>INSERT INTO t (a,b) VALUES (1,2);", "group": "G05 数据库", "ipa": "/ˈɪnˌsɝt/ /ˈɪntʊ/ /viː eɪ el juː iː es/", "audio": "audio/insert_into_values.mp3"}, {"en": "UPDATE ... SET", "zh": "更新<br>UPDATE t SET a=1 WHERE id=2;", "group": "G05 数据库", "ipa": "/juː piː diː eɪ tiː iː/ /sˈɛt/", "audio": "audio/update_set.mp3"}, {"en": "DELETE FROM", "zh": "删除<br>DELETE FROM t WHERE id=2;", "group": "G05 数据库", "ipa": "/diː iː el iː tiː iː/ /fɹˈɒm/", "audio": "audio/delete_from.mp3"}, {"en": "JOIN (INNER/LEFT/RIGHT/FULL)", "zh": "连接<br>JOIN t2 ON t1.id=t2.id", "group": "G05 数据库", "ipa": "/dʒeɪ oʊ aɪ en/ /ˈɪnə/ /el iː ef tiː/ /ɹˈaɪt/ /fˈʊl/", "audio": "audio/join_inner_left_right_full.mp3"}, {"en": "GROUP BY / HAVING", "zh": "分组 / 分组后过滤<br>GROUP BY dept HAVING COUNT(*)>5", "group": "G05 数据库", "ipa": "/dʒiː ɑːr oʊ juː piː/ /bˈaɪ/ /eɪtʃ eɪ viː aɪ en dʒiː/", "audio": "audio/group_by_having.mp3"}, {"en": "ORDER BY (ASC/DESC)", "zh": "排序<br>ORDER BY time DESC", "group": "G05 数据库", "ipa": "/ˈɔːdə/ /bˈaɪ/ /eɪ es siː/ /diː iː es siː/", "audio": "audio/order_by_asc_desc.mp3"}, {"en": "LIMIT / OFFSET", "zh": "限制条数 / 偏移<br>LIMIT 10 OFFSET 20", "group": "G05 数据库", "ipa": "/lˈɪmɪt/ /oʊ ef ef es iː tiː/", "audio": "audio/limit_offset.mp3"}, {"en": "CREATE / DROP / ALTER", "zh": "创建 / 删除 / 修改<br>ALTER TABLE t ADD COLUMN c INT;", "group": "G05 数据库", "ipa": "/siː ɑːr iː eɪ tiː iː/ /diː ɑːr oʊ piː/ /ˈɒltə/", "audio": "audio/create_drop_alter.mp3"}, {"en": "INDEX / PRIMARY KEY / FOREIGN KEY", "zh": "索引 / 主键 / 外键<br>referential integrity 参照完整性", "group": "G05 数据库", "ipa": "/aɪ en diː iː eks/ /pɹˈaɪməɹi/ /kˈiː/ /ef oʊ ɑːr iː aɪ dʒiː en/ /kˈiː/", "audio": "audio/index_primary_key_foreign_key.mp3"}, {"en": "DISTINCT", "zh": "去重<br>SELECT DISTINCT city FROM users;", "group": "G05 数据库", "ipa": "/dɪstˈɪŋkt/", "audio": "audio/distinct.mp3"}, {"en": "UNION / INTERSECT", "zh": "并集 / 交集<br>UNION ALL 不去重", "group": "G05 数据库", "ipa": "/juː en aɪ oʊ en/ /aɪ en tiː iː ɑːr es iː siː tiː/", "audio": "audio/union_intersect.mp3"}, {"en": "CASE WHEN", "zh": "条件表达式<br>CASE WHEN age>18 THEN ... END", "group": "G05 数据库", "ipa": "/kˈeɪs/ /wˈɛn/", "audio": "audio/case_when.mp3"}, {"en": "relation / tuple / attribute", "zh": "关系 / 元组 / 属性<br>a table is a relation", "group": "G05 数据库", "ipa": "/ɹɪlˈeɪʃən/ /ˈætɹəbˌjut/", "audio": "audio/relation_tuple_attribute.mp3"}, {"en": "schema", "zh": "模式 / 架构<br>database schema 设计", "group": "G05 数据库", "ipa": "", "audio": "audio/schema.mp3"}, {"en": "normalization", "zh": "规范化<br>1NF / 2NF / 3NF；denormalization 反规范化", "group": "G05 数据库", "ipa": "", "audio": "audio/normalization.mp3"}, {"en": "candidate key / super key", "zh": "候选键 / 超键<br>a minimal super key 最小超键", "group": "G05 数据库", "ipa": "/kˈiː/ /kˈiː/", "audio": "audio/candidate_key_super_key.mp3"}, {"en": "ACID", "zh": "事务四特性<br>atomicity 原子性；consistency 一致性；isolation 隔离性；durability 持久性", "group": "G05 数据库", "ipa": "/eɪ siː aɪ diː/", "audio": "audio/acid.mp3"}, {"en": "commit / rollback", "zh": "提交 / 回滚<br>savepoint 保存点", "group": "G05 数据库", "ipa": "/kəmˈɪt/", "audio": "audio/commit_rollback.mp3"}, {"en": "dirty read / non-repeatable read", "zh": "脏读 / 不可重复读<br>phantom read 幻读", "group": "G05 数据库", "ipa": "", "audio": "audio/dirty_read_non_repeatable_read.mp3"}, {"en": "isolation level", "zh": "隔离级别<br>read committed 读已提交", "group": "G05 数据库", "ipa": "/lˈɛvəl/", "audio": "audio/isolation_level.mp3"}, {"en": "concurrency control", "zh": "并发控制<br>lock 锁；timestamp 时间戳；MVCC 多版本并发控制", "group": "G05 数据库", "ipa": "/kəntɹˈəʊl/", "audio": "audio/concurrency_control.mp3"}, {"en": "replication / sharding", "zh": "复制 / 分片<br>read replica 只读副本", "group": "G05 数据库", "ipa": "", "audio": "audio/replication_sharding.mp3"}, {"en": "index / query plan", "zh": "索引 / 执行计划<br>the optimizer picks a plan 优化器选计划", "group": "G05 数据库", "ipa": "", "audio": "audio/index_query_plan.mp3"}, {"en": "ACID vs. eventual consistency", "zh": "强一致 vs. 最终一致<br>NoSQL trade-off", "group": "G05 数据库", "ipa": "/eɪ siː aɪ diː/", "audio": "audio/acid_vs_eventual_consistency.mp3"}, {"en": "source code / object code", "zh": "源代码 / 目标代码<br>compile: source → object", "group": "G06 编译原理与计算机组成", "ipa": "/sˈɔːs/ /kˈəʊd/ /ˈɑbdʒɛkt/ /kˈəʊd/", "audio": "audio/source_code_object_code.mp3"}, {"en": "compiler / interpreter", "zh": "编译器 / 解释器<br>interpret line by line 逐行解释", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/compiler_interpreter.mp3"}, {"en": "lexer / tokenizer", "zh": "词法分析器<br>tokenize 把字符流切成 token", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/lexer_tokenizer.mp3"}, {"en": "parser", "zh": "语法分析器<br>parse the grammar 分析语法", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/parser.mp3"}, {"en": "symbol table", "zh": "符号表<br>look up an identifier 查标识符", "group": "G06 编译原理与计算机组成", "ipa": "/sˈɪmbəl/ /tˈeɪbəl/", "audio": "audio/symbol_table.mp3"}, {"en": "intermediate representation (IR)", "zh": "中间表示<br>three-address code 三地址码", "group": "G06 编译原理与计算机组成", "ipa": "/aɪ ɑːr/", "audio": "audio/intermediate_representation_ir.mp3"}, {"en": "optimization", "zh": "优化<br>constant folding 常量折叠；dead code elimination 死代码消除", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/optimization.mp3"}, {"en": "code generation", "zh": "代码生成<br>emit machine code 生成机器码", "group": "G06 编译原理与计算机组成", "ipa": "/kˈəʊd/ /dʒˌɛnəɹˈeɪʃən/", "audio": "audio/code_generation.mp3"}, {"en": "register allocation", "zh": "寄存器分配<br>spill to memory 溢出到内存", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/register_allocation.mp3"}, {"en": "linker / linker error", "zh": "链接器 / 链接错误<br>undefined reference 未定义引用", "group": "G06 编译原理与计算机组成", "ipa": "/ˈɛɹə/", "audio": "audio/linker_linker_error.mp3"}, {"en": "grammar / BNF / EBNF", "zh": "文法 / 巴克斯-诺尔范式<br>a production rule 产生式", "group": "G06 编译原理与计算机组成", "ipa": "/biː en ef/ /iː biː en ef/", "audio": "audio/grammar_bnf_ebnf.mp3"}, {"en": "AST (abstract syntax tree)", "zh": "抽象语法树<br>parse into an AST 解析成语法树", "group": "G06 编译原理与计算机组成", "ipa": "/eɪ es tiː/ /ˈæbˌstɹækt/ /tɹˈiː/", "audio": "audio/ast_abstract_syntax_tree.mp3"}, {"en": "static vs. dynamic binding", "zh": "静态绑定 vs. 动态绑定<br>late binding 后绑定", "group": "G06 编译原理与计算机组成", "ipa": "/stˈætɪk/ /daɪnˈæmɪk/", "audio": "audio/static_vs_dynamic_binding.mp3"}, {"en": "bytecode / VM", "zh": "字节码 / 虚拟机<br>run on the JVM 在 JVM 上运行", "group": "G06 编译原理与计算机组成", "ipa": "/viː em/", "audio": "audio/bytecode_vm.mp3"}, {"en": "CPU / ALU / CU", "zh": "中央处理器 / 运算器 / 控制器<br>fetch-decode-execute 取指-译码-执行", "group": "G06 编译原理与计算机组成", "ipa": "/siː piː juː/ /eɪ el juː/ /siː juː/", "audio": "audio/cpu_alu_cu.mp3"}, {"en": "ISA (instruction set architecture)", "zh": "指令集体系结构<br>an instruction 指令；opcode 操作码", "group": "G06 编译原理与计算机组成", "ipa": "/aɪ es eɪ/ /sˈɛt/", "audio": "audio/isa_instruction_set_architecture.mp3"}, {"en": "register file", "zh": "寄存器堆<br>a word is 32 bits 一个字 32 位", "group": "G06 编译原理与计算机组成", "ipa": "/ˈfaɪɫ/", "audio": "audio/register_file.mp3"}, {"en": "cache line / tag / dirty bit", "zh": "缓存行 / 标记 / 脏位<br>write hit 写命中", "group": "G06 编译原理与计算机组成", "ipa": "/bˈɪt/", "audio": "audio/cache_line_tag_dirty_bit.mp3"}, {"en": "RAM / ROM / SRAM / DRAM", "zh": "随机/只读存储器；静态/动态内存<br>volatile 易失的（RAM）", "group": "G06 编译原理与计算机组成", "ipa": "/ɑːr eɪ em/ /ɑːr oʊ em/ /es ɑːr eɪ em/ /diː ɑːr eɪ em/", "audio": "audio/ram_rom_sram_dram.mp3"}, {"en": "pipeline", "zh": "流水线<br>pipeline hazard 流水线冒险；forwarding 转发", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/pipeline.mp3"}, {"en": "branch prediction", "zh": "分支预测<br>misprediction 预测失败", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/branch_prediction.mp3"}, {"en": "instruction cycle / clock", "zh": "指令周期 / 时钟<br>clock frequency 时钟频率", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/instruction_cycle_clock.mp3"}, {"en": "I/O interface / controller", "zh": "输入输出接口 / 控制器<br>interrupt-driven I/O 中断驱动", "group": "G06 编译原理与计算机组成", "ipa": "/ˈɪntəfˌeɪs/ /kəntɹˈəʊlə/", "audio": "audio/i_o_interface_controller.mp3"}, {"en": "DMA", "zh": "直接存储器访问<br>transfer data without CPU involvement", "group": "G06 编译原理与计算机组成", "ipa": "/diː em eɪ/", "audio": "audio/dma.mp3"}, {"en": "MMU (memory management unit)", "zh": "内存管理单元<br>address translation performed by the MMU", "group": "G06 编译原理与计算机组成", "ipa": "/em em juː/ /mˈɛməɹˌi/ /mˈænɪdʒmənt/", "audio": "audio/mmu_memory_management_unit.mp3"}, {"en": "endianness (big/little endian)", "zh": "大小端<br>byte order 字节序", "group": "G06 编译原理与计算机组成", "ipa": "/bˈɪɡ/ /lˈɪtəl/", "audio": "audio/endianness_big_little_endian.mp3"}, {"en": "architecture / microarchitecture", "zh": "体系结构 / 微架构<br>same ISA, different design", "group": "G06 编译原理与计算机组成", "ipa": "", "audio": "audio/architecture_microarchitecture.mp3"}, {"en": "implement", "zh": "实现<br>implement the module 实现模块", "group": "G07 软件工程", "ipa": "/ˈɪmpɫəmənt/", "audio": "audio/implement.mp3"}, {"en": "refactor", "zh": "重构<br>refactor the code 重构代码（不改外部行为）", "group": "G07 软件工程", "ipa": "", "audio": "audio/refactor.mp3"}, {"en": "debug / troubleshoot", "zh": "调试 / 排障<br>debug a bug 调试缺陷", "group": "G07 软件工程", "ipa": "", "audio": "audio/debug_troubleshoot.mp3"}, {"en": "deploy / release", "zh": "部署 / 发布<br>deploy to production 部署到生产环境", "group": "G07 软件工程", "ipa": "/ɹiˈɫis/", "audio": "audio/deploy_release.mp3"}, {"en": "maintain", "zh": "维护<br>maintain the system 维护系统", "group": "G07 软件工程", "ipa": "/meɪntˈeɪn/", "audio": "audio/maintain.mp3"}, {"en": "specify / document", "zh": "规定 / 编写文档<br>specify the requirements 明确需求", "group": "G07 软件工程", "ipa": "/ˈdɑkjəmɛnt/", "audio": "audio/specify_document.mp3"}, {"en": "validate vs. verify", "zh": "验证（对）vs. 校验（过程）<br>validate the input 校验输入", "group": "G07 软件工程", "ipa": "", "audio": "audio/validate_vs_verify.mp3"}, {"en": "estimate / schedule", "zh": "估算 / 排期<br>estimate the workload 估算工作量", "group": "G07 软件工程", "ipa": "/ˈɛstəˌmeɪt/ /ʃˈɛdjuːl/", "audio": "audio/estimate_schedule.mp3"}, {"en": "integrate", "zh": "集成<br>integrate modules 集成模块", "group": "G07 软件工程", "ipa": "/ˈɪntɪɡɹˌeɪt/", "audio": "audio/integrate.mp3"}, {"en": "migrate", "zh": "迁移<br>migrate to a new platform 迁移到新平台", "group": "G07 软件工程", "ipa": "", "audio": "audio/migrate.mp3"}, {"en": "scale out / scale up", "zh": "横向 / 纵向扩展<br>scale out with more nodes", "group": "G07 软件工程", "ipa": "/skˈeɪl/ /ˈaʊt/ /skˈeɪl/ /ˈʌp/", "audio": "audio/scale_out_scale_up.mp3"}, {"en": "optimize", "zh": "优化<br>optimize for performance 为性能优化", "group": "G07 软件工程", "ipa": "", "audio": "audio/optimize.mp3"}, {"en": "bug / defect / issue", "zh": "缺陷（三种叫法）<br>fix a bug 修复缺陷", "group": "G07 软件工程", "ipa": "/ˈdifɛkt/ /ˈɪʃuː/", "audio": "audio/bug_defect_issue.mp3"}, {"en": "feature request", "zh": "特性请求<br>an enhancement 新功能", "group": "G07 软件工程", "ipa": "/fˈiːtʃə/ /ɹɪkwˈɛst/", "audio": "audio/feature_request.mp3"}, {"en": "code review", "zh": "代码评审<br>peer review 同级评审", "group": "G07 软件工程", "ipa": "/kˈəʊd/ /ˌɹivˈju/", "audio": "audio/code_review.mp3"}, {"en": "unit / integration test", "zh": "单元 / 集成测试<br>test coverage 测试覆盖率", "group": "G07 软件工程", "ipa": "", "audio": "audio/unit_integration_test.mp3"}, {"en": "regression", "zh": "回归<br>regression test 回归测试", "group": "G07 软件工程", "ipa": "", "audio": "audio/regression.mp3"}, {"en": "version control", "zh": "版本控制<br>commit / merge / rebase", "group": "G07 软件工程", "ipa": "/kəntɹˈəʊl/", "audio": "audio/version_control.mp3"}, {"en": "branch / merge conflict", "zh": "分支 / 合并冲突<br>resolve a conflict 解决冲突", "group": "G07 软件工程", "ipa": "/ˈkɑnfɫɪkt/", "audio": "audio/branch_merge_conflict.mp3"}, {"en": "continuous integration (CI)", "zh": "持续集成<br>build pipeline 构建流水线", "group": "G07 软件工程", "ipa": "/kəntˈɪnjuːəs/ /siː aɪ/", "audio": "audio/continuous_integration_ci.mp3"}, {"en": "continuous delivery / deployment", "zh": "持续交付 / 部署<br>automated deployment", "group": "G07 软件工程", "ipa": "/kəntˈɪnjuːəs/", "audio": "audio/continuous_delivery_deployment.mp3"}, {"en": "technical debt", "zh": "技术债<br>pay off technical debt 偿还技术债", "group": "G07 软件工程", "ipa": "", "audio": "audio/technical_debt.mp3"}, {"en": "legacy system", "zh": "遗留系统<br>migrate a legacy system", "group": "G07 软件工程", "ipa": "", "audio": "audio/legacy_system.mp3"}, {"en": "scaffold / boilerplate", "zh": "脚手架 / 样板代码<br>generate boilerplate", "group": "G07 软件工程", "ipa": "", "audio": "audio/scaffold_boilerplate.mp3"}, {"en": "requirement traceability", "zh": "需求可追溯性<br>trace back to the requirement", "group": "G07 软件工程", "ipa": "", "audio": "audio/requirement_traceability.mp3"}, {"en": "artificial intelligence (AI)", "zh": "人工智能<br>AI / ML / DL 三者关系", "group": "G08 人工智能与机器学习", "ipa": "/ˌɑːtɪfˈɪʃəl/ /ˌeɪˈaɪ/", "audio": "audio/artificial_intelligence_ai.mp3"}, {"en": "machine learning", "zh": "机器学习<br>learn from data 从数据中学习", "group": "G08 人工智能与机器学习", "ipa": "/məʃˈiːn/", "audio": "audio/machine_learning.mp3"}, {"en": "deep learning", "zh": "深度学习<br>multi-layer neural network 多层神经网络", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/deep_learning.mp3"}, {"en": "model / training / inference", "zh": "模型 / 训练 / 推理<br>inference on new data 推理新数据", "group": "G08 人工智能与机器学习", "ipa": "/mˈɒdəl/", "audio": "audio/model_training_inference.mp3"}, {"en": "feature / label / sample", "zh": "特征 / 标签 / 样本<br>labeled data 有标签数据", "group": "G08 人工智能与机器学习", "ipa": "/fˈiːtʃə/ /lˈeɪbəl/ /sˈɑːmpəl/", "audio": "audio/feature_label_sample.mp3"}, {"en": "training / validation / test set", "zh": "训练 / 验证 / 测试集<br>avoid data leakage 避免数据泄漏", "group": "G08 人工智能与机器学习", "ipa": "/sˈɛt/", "audio": "audio/training_validation_test_set.mp3"}, {"en": "supervised / unsupervised learning", "zh": "有监督 / 无监督学习<br>self-supervised 自监督", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/supervised_unsupervised_learning.mp3"}, {"en": "reinforcement learning", "zh": "强化学习<br>agent / environment / reward 智能体/环境/奖励", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/reinforcement_learning.mp3"}, {"en": "overfitting / underfitting", "zh": "过拟合 / 欠拟合<br>regularization 正则化缓解过拟合", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/overfitting_underfitting.mp3"}, {"en": "hyperparameter", "zh": "超参数<br>tune hyperparameters 调超参数", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/hyperparameter.mp3"}, {"en": "loss function", "zh": "损失函数<br>minimize the loss 最小化损失", "group": "G08 人工智能与机器学习", "ipa": "/lˈɒs/ /fˈʌŋkʃən/", "audio": "audio/loss_function.mp3"}, {"en": "gradient descent", "zh": "梯度下降<br>learning rate 学习率；converge 收敛", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/gradient_descent.mp3"}, {"en": "backpropagation", "zh": "反向传播<br>propagate the error backward", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/backpropagation.mp3"}, {"en": "epoch / batch size", "zh": "轮次 / 批大小<br>mini-batch 小批量", "group": "G08 人工智能与机器学习", "ipa": "/bˈætʃ/", "audio": "audio/epoch_batch_size.mp3"}, {"en": "cross-validation", "zh": "交叉验证<br>train / test split 训练测试划分", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/cross_validation.mp3"}, {"en": "precision / recall / F1", "zh": "准确率 / 召回率 / F1<br>trade-off between precision and recall", "group": "G08 人工智能与机器学习", "ipa": "/ˈɹiˌkɔɫ/", "audio": "audio/precision_recall_f1.mp3"}, {"en": "accuracy / confusion matrix", "zh": "准确率 / 混淆矩阵<br>false positive / false negative", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/accuracy_confusion_matrix.mp3"}, {"en": "bias-variance tradeoff", "zh": "偏差-方差权衡<br>reduce bias and variance", "group": "G08 人工智能与机器学习", "ipa": "/bˈaɪəs/", "audio": "audio/bias_variance_tradeoff.mp3"}, {"en": "embedding", "zh": "嵌入 / 向量表示<br>word embedding / word2vec", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/embedding.mp3"}, {"en": "fine-tune", "zh": "微调<br>fine-tune a pre-trained model 微调预训练模型", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/fine_tune.mp3"}, {"en": "inference engine / serving", "zh": "推理引擎 / 部署服务<br>low-latency inference", "group": "G08 人工智能与机器学习", "ipa": "/ˈɛndʒɪn/", "audio": "audio/inference_engine_serving.mp3"}, {"en": "transformer / attention", "zh": "变换器 / 注意力<br>self-attention 自注意力", "group": "G08 人工智能与机器学习", "ipa": "/ətˈɛnʃən/", "audio": "audio/transformer_attention.mp3"}, {"en": "token / tokenizer", "zh": "词元 / 分词器<br>subword tokenization 子词切分", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/token_tokenizer.mp3"}, {"en": "prompt / RLHF", "zh": "提示 / 人类反馈强化学习<br>prompt engineering 提示工程", "group": "G08 人工智能与机器学习", "ipa": "/ɑːr el eɪtʃ ef/", "audio": "audio/prompt_rlhf.mp3"}, {"en": "ablation study", "zh": "消融实验<br>An ablation study verifies each module.", "group": "G08 人工智能与机器学习", "ipa": "", "audio": "audio/ablation_study.mp3"}, {"en": "state-of-the-art (SOTA)", "zh": "当前最优<br>a state-of-the-art model", "group": "G08 人工智能与机器学习", "ipa": "/stˈeɪt/ /ˈɒv/ /ðə/ /es oʊ tiː eɪ/", "audio": "audio/state_of_the_art_sota.mp3"}, {"en": "error / warning / fatal error", "zh": "错误 / 警告 / 致命错误<br>syntax error 语法错误", "group": "G09 代码报错与日志", "ipa": "/ˈɛɹə/ /ˈɛɹə/", "audio": "audio/error_warning_fatal_error.mp3"}, {"en": "undefined reference / linker error", "zh": "未定义引用 / 链接错误<br>漏链接库；函数声明与定义不一致", "group": "G09 代码报错与日志", "ipa": "/ɹˈɛfɹəns/ /ˈɛɹə/", "audio": "audio/undefined_reference_linker_error.mp3"}, {"en": "segmentation fault (core dumped)", "zh": "段错误<br>空指针、越界访问、数组越界", "group": "G09 代码报错与日志", "ipa": "/fˈɒlt/", "audio": "audio/segmentation_fault_core_dumped.mp3"}, {"en": "out of memory", "zh": "内存不足<br>分配过大；内存泄漏累积", "group": "G09 代码报错与日志", "ipa": "/ˈaʊt/ /ˈɒv/ /mˈɛməɹˌi/", "audio": "audio/out_of_memory.mp3"}, {"en": "stack overflow", "zh": "栈溢出<br>递归过深无终止条件", "group": "G09 代码报错与日志", "ipa": "/stˈæk/", "audio": "audio/stack_overflow.mp3"}, {"en": "infinite loop", "zh": "死循环<br>循环条件恒真；忘记更新计数器", "group": "G09 代码报错与日志", "ipa": "", "audio": "audio/infinite_loop.mp3"}, {"en": "null pointer exception", "zh": "空指针异常<br>对象未初始化；解引用空引用", "group": "G09 代码报错与日志", "ipa": "/ɛksˈɛpʃən/", "audio": "audio/null_pointer_exception.mp3"}, {"en": "permission denied", "zh": "权限不足<br>文件权限；端口被占用", "group": "G09 代码报错与日志", "ipa": "/pəmˈɪʃən/", "audio": "audio/permission_denied.mp3"}, {"en": "command not found", "zh": "命令未找到<br>环境变量 PATH 未配置", "group": "G09 代码报错与日志", "ipa": "/nˈɒt/", "audio": "audio/command_not_found.mp3"}, {"en": "timeout", "zh": "超时<br>网络不通；请求时间过长", "group": "G09 代码报错与日志", "ipa": "/tˈaɪmaʊt/", "audio": "audio/timeout.mp3"}, {"en": "deprecated", "zh": "已废弃（警告）<br>API 已不推荐使用，但尚可用", "group": "G09 代码报错与日志", "ipa": "", "audio": "audio/deprecated.mp3"}, {"en": "unreachable code", "zh": "不可达代码<br>return 之后的语句", "group": "G09 代码报错与日志", "ipa": "/kˈəʊd/", "audio": "audio/unreachable_code.mp3"}, {"en": "race condition / data race", "zh": "数据竞争<br>多线程未加锁", "group": "G09 代码报错与日志", "ipa": "/kəndˈɪʃən/ /dˈeɪtə/", "audio": "audio/race_condition_data_race.mp3"}, {"en": "memory leak detected", "zh": "检测到内存泄漏<br>malloc / new 未对应 free / delete", "group": "G09 代码报错与日志", "ipa": "/mˈɛməɹˌi/ /lˈiːk/", "audio": "audio/memory_leak_detected.mp3"}, {"en": "compile error vs. runtime error", "zh": "编译错误 vs. 运行时错误<br>compile-time 编译期；run-time 运行期", "group": "G09 代码报错与日志", "ipa": "/ˈɛɹə/ /ˈɛɹə/", "audio": "audio/compile_error_vs_runtime_error.mp3"}, {"en": "exception / throw / catch", "zh": "异常 / 抛出 / 捕获<br>uncaught exception 未捕获异常", "group": "G09 代码报错与日志", "ipa": "/ɛksˈɛpʃən/ /θɹˈəʊ/ /kˈætʃ/", "audio": "audio/exception_throw_catch.mp3"}, {"en": "assertion failed", "zh": "断言失败<br>assert(x > 0) 条件不成立", "group": "G09 代码报错与日志", "ipa": "", "audio": "audio/assertion_failed.mp3"}, {"en": "buffer overflow", "zh": "缓冲区溢出<br>stack-based buffer overflow 栈溢出攻击", "group": "G09 代码报错与日志", "ipa": "", "audio": "audio/buffer_overflow.mp3"}, {"en": "allocate / free memory", "zh": "分配 / 释放内存<br>malloc / free in C", "group": "G10 高频固定搭配与动词", "ipa": "/ˈæləkˌeɪt/ /mˈɛməɹˌi/", "audio": "audio/allocate_free_memory.mp3"}, {"en": "traverse a tree", "zh": "遍历一棵树<br>traverse in pre-order 前序遍历", "group": "G10 高频固定搭配与动词", "ipa": "/ˈeɪ/ /tɹˈiː/", "audio": "audio/traverse_a_tree.mp3"}, {"en": "compile source code", "zh": "编译源代码<br>compile 源文件 → 目标代码", "group": "G10 高频固定搭配与动词", "ipa": "/sˈɔːs/ /kˈəʊd/", "audio": "audio/compile_source_code.mp3"}, {"en": "resolve a name", "zh": "解析名称<br>resolve a DNS name", "group": "G10 高频固定搭配与动词", "ipa": "/ɹiˈzɑɫv/ /ˈeɪ/", "audio": "audio/resolve_a_name.mp3"}, {"en": "invoke a method", "zh": "调用方法<br>invoke method() 调用", "group": "G10 高频固定搭配与动词", "ipa": "/ˈeɪ/ /mˈɛθəd/", "audio": "audio/invoke_a_method.mp3"}, {"en": "dispatch a process", "zh": "分派进程<br>dispatch to CPU 派发到处理器", "group": "G10 高频固定搭配与动词", "ipa": "/dɪspˈætʃ/ /ˈeɪ/ /ˈpɹɑˌsɛs/", "audio": "audio/dispatch_a_process.mp3"}, {"en": "emit code", "zh": "生成代码<br>emit machine code 生成机器码", "group": "G10 高频固定搭配与动词", "ipa": "/ɪmˈɪt/ /kˈəʊd/", "audio": "audio/emit_code.mp3"}, {"en": "cache a result", "zh": "缓存结果<br>cache the result for reuse", "group": "G10 高频固定搭配与动词", "ipa": "/ˈeɪ/ /ɹɪzˈʌlt/", "audio": "audio/cache_a_result.mp3"}, {"en": "parse input", "zh": "解析输入<br>parse a grammar 解析语法", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/parse_input.mp3"}, {"en": "inherit from / override", "zh": "继承自 / 重写<br>inherit from a base class", "group": "G10 高频固定搭配与动词", "ipa": "/ɪnhˈɛɹɪt/ /fɹˈɒm/", "audio": "audio/inherit_from_override.mp3"}, {"en": "bottleneck", "zh": "瓶颈<br>a performance bottleneck 性能瓶颈", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/bottleneck.mp3"}, {"en": "trade-off", "zh": "取舍<br>There is a trade-off between speed and memory.", "group": "G10 高频固定搭配与动词", "ipa": "/tɹˈeɪd/ /ˈɒf/", "audio": "audio/trade_off.mp3"}, {"en": "worst case", "zh": "最坏情况<br>in the worst case 在最坏情况下", "group": "G10 高频固定搭配与动词", "ipa": "/kˈeɪs/", "audio": "audio/worst_case.mp3"}, {"en": "in-place", "zh": "原地<br>sort in-place 原地排序", "group": "G10 高频固定搭配与动词", "ipa": "/ˈɪn/ /plˈeɪs/", "audio": "audio/in_place.mp3"}, {"en": "by reference", "zh": "按引用<br>pass by reference 按引用传参", "group": "G10 高频固定搭配与动词", "ipa": "/bˈaɪ/ /ɹˈɛfɹəns/", "audio": "audio/by_reference.mp3"}, {"en": "access violation", "zh": "访问违规<br>memory access violation", "group": "G10 高频固定搭配与动词", "ipa": "/ˈæksɛs/", "audio": "audio/access_violation.mp3"}, {"en": "network throughput", "zh": "网络吞吐量<br>high throughput 高吞吐量", "group": "G10 高频固定搭配与动词", "ipa": "/nˈɛtwɜːk/ /θɹˈuːpʊt/", "audio": "audio/network_throughput.mp3"}, {"en": "latency vs. bandwidth", "zh": "时延 vs. 带宽<br>high bandwidth, high latency", "group": "G10 高频固定搭配与动词", "ipa": "/lˈeɪtnsi/ /bˈændwɪdθ/", "audio": "audio/latency_vs_bandwidth.mp3"}, {"en": "optimal solution", "zh": "最优解<br>find the optimal solution", "group": "G10 高频固定搭配与动词", "ipa": "/səlˈuːʃən/", "audio": "audio/optimal_solution.mp3"}, {"en": "arbitrary", "zh": "任意的<br>an arbitrary input 任意输入", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/arbitrary.mp3"}, {"en": "deterministic", "zh": "确定性的<br>a deterministic algorithm", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/deterministic.mp3"}, {"en": "redundant", "zh": "冗余的<br>redundant data 冗余数据", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/redundant.mp3"}, {"en": "contiguous", "zh": "连续的<br>contiguous memory 连续内存", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/contiguous.mp3"}, {"en": "concurrent", "zh": "并发的<br>concurrent execution", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/concurrent.mp3"}, {"en": "recursive", "zh": "递归的<br>a recursive definition", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/recursive.mp3"}, {"en": "converge", "zh": "收敛<br>gradient descent converges", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/converge.mp3"}, {"en": "emit / omit", "zh": "生成 / 省略<br>emit machine code；omit the parameter", "group": "G10 高频固定搭配与动词", "ipa": "/ɪmˈɪt/ /əʊmˈɪt/", "audio": "audio/emit_omit.mp3"}, {"en": "propose / evaluate / outperform", "zh": "提出 / 评估 / 优于<br>We propose a novel framework... / outperforms SOTA", "group": "G10 高频固定搭配与动词", "ipa": "/pɹəpˈəʊz/", "audio": "audio/propose_evaluate_outperform.mp3"}, {"en": "ablation study", "zh": "消融实验<br>verify contribution of each module", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/ablation_study.mp3"}, {"en": "generalize well", "zh": "泛化好<br>the model generalizes well to unseen data", "group": "G10 高频固定搭配与动词", "ipa": "/wˈɛl/", "audio": "audio/generalize_well.mp3"}, {"en": "the time complexity of", "zh": "…的时间复杂度<br>The time complexity of quicksort is O(n log n).", "group": "G10 高频固定搭配与动词", "ipa": "/ðə/ /tˈaɪm/ /ˈɒv/", "audio": "audio/the_time_complexity_of.mp3"}, {"en": "in the wild", "zh": "在真实环境中<br>tested in the wild", "group": "G10 高频固定搭配与动词", "ipa": "/ˈɪn/ /ðə/", "audio": "audio/in_the_wild.mp3"}, {"en": "end-to-end", "zh": "端到端<br>an end-to-end solution", "group": "G10 高频固定搭配与动词", "ipa": "/ˈɛnd/ /tˈuː/ /ˈɛnd/", "audio": "audio/end_to_end.mp3"}, {"en": "real-world scenario", "zh": "真实场景<br>in a real-world scenario", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/real_world_scenario.mp3"}, {"en": "minimize / maximize", "zh": "最小化 / 最大化<br>minimize the loss function", "group": "G10 高频固定搭配与动词", "ipa": "", "audio": "audio/minimize_maximize.mp3"}];
+const $ = id => document.getElementById(id);
+const KNOWN_KEY = 'cs_known';
+const WRONG_KEY = 'cs_wrong';
+const store = {
+  get known() { try { return new Set(JSON.parse(localStorage.getItem(KNOWN_KEY) || '[]')); } catch { return new Set(); } },
+  set known(set) { localStorage.setItem(KNOWN_KEY, JSON.stringify([...set])); },
+  get wrong() { try { return new Set(JSON.parse(localStorage.getItem(WRONG_KEY) || '[]')); } catch { return new Set(); } },
+  set wrong(set) { localStorage.setItem(WRONG_KEY, JSON.stringify([...set])); }
+};
+
+let known = store.known;
+let wrong = store.wrong;
+let mode = 'study';        // 'study' 正常学习 | 'wrong' 错题本
+let queue = [];            // array of data indices
+let cur = 0;               // pointer into queue
+let flipped = false;
+let filtered = DATA.map((_, i) => i); // current group filter
+
+// ---------- group select ----------
+const groupSel = $('groupSel');
+const groups = [...new Set(DATA.map(d => d.group))];
+groupSel.innerHTML = '<option value="">全部（' + DATA.length + '）</option>' +
+  groups.map(g => {
+    const n = DATA.filter(d => d.group === g).length;
+    return `<option value="${g}">${g}（${n}）</option>`;
+  }).join('');
+groupSel.onchange = () => {
+  filtered = DATA.map((d, i) => ({ d, i })).filter(x => !groupSel.value || x.d.group === groupSel.value).map(x => x.i);
+  buildQueue();
+};
+
+// ---------- header stats / mode ----------
+function updateHeader() {
+  $('btnWrongBook').classList.toggle('active', mode === 'wrong');
+  $('btnWrongBook').innerHTML = mode === 'wrong'
+    ? '返回学习'
+    : '错题本<span class="badge">' + wrong.size + '</span>';
+  $('statsLine').innerHTML = mode === 'wrong'
+    ? '错题待消除 <b class="red">' + wrong.size + '</b>'
+    : '已掌握 <b>' + known.size + '</b> / <span>' + DATA.length + '</span>';
+}
+
+// ---------- queue ----------
+function buildQueue() {
+  let list = filtered.slice();
+  if (mode === 'wrong') list = list.filter(i => wrong.has(DATA[i].en));
+  queue = list;
+  cur = 0;
+  $('done').hidden = true;
+  $('study').style.display = '';
+  $('actions').style.visibility = '';
+  updateHeader();
+  render();
+}
+function restartGroup() { buildQueue(); }
+function reviewUnknown() {
+  queue = filtered.filter(i => !known.has(DATA[i].en));
+  cur = 0;
+  $('done').hidden = true;
+  $('study').style.display = '';
+  $('actions').style.visibility = '';
+  render();
+}
+
+// ---------- render ----------
+let backFillTimer = null;
+function render() {
+  if (queue.length === 0 || cur >= queue.length) { renderDone(); return; }
+  const d = DATA[queue[cur]];
+  const wasFlipped = flipped;
+  if (backFillTimer) { clearTimeout(backFillTimer); backFillTimer = null; }
+  flipped = false;
+  $('card').classList.remove('flipped');
+  $('btnFlip').hidden = false;
+  $('btnFlip').disabled = false;
+  $('btnUnknown').hidden = true;
+  $('btnKnown').hidden = true;
+  // 正面内容立即更新（翻回时正面后半段才可见，安全）
+  $('wordFront').innerHTML = d.en;
+  $('ipaText').textContent = d.ipa || '';
+  $('ipaFront').hidden = !d.ipa;
+  // 英语正面：有 MP3 就显示喇叭（法律类卡虽无 IPA 但有 MP3 也会显示）
+  $('speakFront').hidden = !d.audio;
+  $('tagFront').textContent = d.group;
+  $('knownDot').hidden = mode === 'wrong' || !known.has(d.en);
+  $('wrongDot').hidden = !wrong.has(d.en);
+  $('posFront').textContent = `${cur + 1} / ${queue.length}`;
+  $('btnKnown').textContent = mode === 'wrong' ? '答对了 →' : '认识 →';
+  $('btnUnknown').textContent = mode === 'wrong' ? '还没记住 ←' : '不认识 ←';
+  $('progressFill').style.width = (cur / queue.length * 100) + '%';
+  $('progressNum').textContent = `${cur} / ${queue.length}`;
+  // 答案（背面）内容：若当前已翻转，翻回动画前半段背面仍可见，
+  // 先清空避免新答案闪现，等动画过半（约 250ms）背面不可见时再填入
+  if (wasFlipped) {
+    $('wordBack').innerHTML = '';
+    $('enBack').textContent = '';
+    $('tagBack').textContent = '';
+    backFillTimer = setTimeout(() => {
+      $('wordBack').innerHTML = d.zh;
+      $('tagBack').textContent = d.group;
+      $('enBack').textContent = d.en + (d.ipa ? '  ' + d.ipa : '');
+      backFillTimer = null;
+    }, 250);
+  } else {
+    $('wordBack').innerHTML = d.zh;
+    $('tagBack').textContent = d.group;
+    $('enBack').textContent = d.en + (d.ipa ? '  ' + d.ipa : '');
+  }
+  updateHeader();
+}
+
+function renderDone() {
+  $('study').style.display = 'none';
+  $('done').hidden = false;
+  $('actions').style.visibility = 'hidden';
+  if (mode === 'wrong') {
+    const wrongInFilter = filtered.filter(i => wrong.has(DATA[i].en)).length;
+    $('doneTitle').textContent = wrongInFilter === 0 ? '错题全部消除 🎉' : '本轮错题过完 🎉';
+    $('doneText').textContent = wrongInFilter === 0
+      ? '当前范围的错题都已重新答对。' + (wrong.size === 0 ? '错题本已清空，继续保持！' : '其他分组还有错题，可切换分组继续。')
+      : `还有 ${wrongInFilter} 张错题未消除，再练一遍直到全部答对。`;
+    $('btnAgainUnknown').hidden = true;
+    $('btnRestart').textContent = wrongInFilter === 0 ? '返回学习' : '再练一遍错题';
+  } else {
+    const unknownInFilter = filtered.filter(i => !known.has(DATA[i].en)).length;
+    $('doneTitle').textContent = '本组完成 🎉';
+    $('doneText').textContent = unknownInFilter === 0
+      ? '太棒了！当前范围的卡片全部掌握。'
+      : `本组完成，当前范围还有 ${unknownInFilter} 张未掌握。`;
+    $('btnAgainUnknown').hidden = unknownInFilter === 0;
+    $('btnRestart').textContent = '重新开始本组';
+  }
+  $('progressFill').style.width = '100%';
+  $('progressNum').textContent = `${queue.length} / ${queue.length}`;
+  updateHeader();
+}
+
+// ---------- audio playback (MP3 files, desktop + mobile) ----------
+let _audioCache = {};          // rel(url) -> Audio element
+const _audioRev = String(Date.now());  // 会话固定版本号，绕过 HTTP 缓存的旧 404
+
+function audioUrl(rel) {
+  if (!rel) return '';
+  const p = location.pathname.replace(/index\.html$/, '').replace(/\/$/, '');
+  const segs = p.split('/').filter(Boolean);
+  const up = '../'.repeat(Math.max(0, segs.length - 1));
+  return new URL(up + rel, document.baseURI).href;
+}
+
+function playAudio(url, btn) {
+  if (!url) return;
+  // 停掉上一条不同音频
+  const prev = _audioCache['_current'];
+  if (prev && prev !== _audioCache[url]) {
+    try { prev.pause(); prev.currentTime = 0; } catch(e) {}
+  }
+  let a = _audioCache[url];
+  // 首次创建 或 之前 error 过 → 重建（Chrome 可能记住 error 状态）
+  if (!a || a.error) {
+    a = new Audio();
+    a.preload = 'none';
+    // 首次 src 带会话版本号，绕过 HTTP 缓存的旧 404 响应
+    a.src = url + (url.includes('?') ? '&' : '?') + 'v=' + _audioRev;
+    _audioCache[url] = a;
+  }
+  _audioCache['_current'] = a;
+  // 注意：不再每次都 a.src = url，避免触发 abort 正在加载的请求
+  if (btn) { btn.classList.add('playing'); }
+  const cleanup = () => { if (btn) btn.classList.remove('playing'); };
+  a.onended = cleanup; a.onerror = cleanup;
+  try { a.play().catch(e => { console.warn('audio play failed:', e); cleanup(); }); } catch(e) { cleanup(); }
+}
+
+$('speakFront').addEventListener('click', e => {
+  e.stopPropagation(); e.preventDefault();
+  const d = DATA[queue[cur]];
+  if (d.audio) { playAudio(audioUrl(d.audio), $('speakFront')); }
+});
+
+// ---------- interactions ----------
+function flip() {
+  if ($('done').hidden === false) return;
+  flipped = !flipped;
+  $('card').classList.toggle('flipped', flipped);
+  $('btnFlip').hidden = flipped;
+  $('btnUnknown').hidden = !flipped;
+  $('btnKnown').hidden = !flipped;
+}
+function afterAnswer() {
+  flipped = false;
+  updateHeader();
+  render();
+  $('actions').style.visibility = '';
+}
+$('card').onclick = flip;
+$('btnFlip').onclick = flip;
+// 正常模式：认识=加入已掌握；错题本：答对=从错题本消除
+$('btnKnown').onclick = () => {
+  const d = DATA[queue[cur]];
+  if (mode === 'wrong') {
+    wrong.delete(d.en);
+    store.wrong = wrong;
+    queue.splice(cur, 1);          // 不前进，下一张移到当前位置
+  } else {
+    known.add(d.en);
+    store.known = known;
+    cur++;
+  }
+  afterAnswer();
+};
+// 任何模式下不认识都收录错题本，并排到队尾再出现
+$('btnUnknown').onclick = () => {
+  const d = DATA[queue[cur]];
+  wrong.add(d.en);
+  store.wrong = wrong;
+  queue.push(queue[cur]);
+  if (mode === 'wrong') queue.splice(cur, 1);
+  else cur++;
+  afterAnswer();
+};
+$('btnShuffle').onclick = () => {
+  for (let i = queue.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [queue[i], queue[j]] = [queue[j], queue[i]]; }
+  cur = 0; render();
+};
+$('btnReset').onclick = () => {
+  if (!confirm('确定清空所有已掌握记录？（错题本不受影响，需在错题本内答对消除）')) return;
+  known = new Set(); store.known = known;
+  buildQueue();
+};
+$('btnWrongBook').onclick = () => {
+  mode = mode === 'study' ? 'wrong' : 'study';
+  buildQueue();
+};
+$('btnAgainUnknown').onclick = () => { $('actions').style.visibility = ''; reviewUnknown(); };
+$('btnRestart').onclick = () => {
+  $('actions').style.visibility = '';
+  if (mode === 'wrong') buildQueue(); else restartGroup();
+};
+
+document.onkeydown = e => {
+  if (e.code === 'Space') { e.preventDefault(); flip(); }
+  else if (e.code === 'ArrowRight' && !$('btnKnown').hidden) $('btnKnown').click();
+  else if (e.code === 'ArrowLeft' && !$('btnUnknown').hidden) $('btnUnknown').click();
+};
+
+buildQueue();
+</script>
+</body>
+</html>
