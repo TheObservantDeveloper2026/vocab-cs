@@ -877,9 +877,10 @@ function render() {
   $('wordFront').innerHTML = d.en;
   $('wordFront').classList.toggle('long', String(d.en).length > 24);
   $('ipaText').textContent = d.ipa || '';
-  $('ipaFront').hidden = !d.ipa;
-  // 英语正面：有 MP3 就显示喇叭（法律类卡虽无 IPA 但有 MP3 也会显示）
-  $('speakFront').hidden = !d.audio;
+  // 没有 MP3 时喇叭改用浏览器 TTS 朗读，仍保留按钮
+  const canSpeak = !!(d.en && String(d.en).trim());
+  $('ipaFront').hidden = !d.ipa && !canSpeak;
+  $('speakFront').hidden = !canSpeak;
   $('tagFront').textContent = d.group;
   $('knownDot').hidden = mode === 'wrong' || !known.has(d.en);
   $('wrongDot').hidden = !wrong.has(d.en);
@@ -940,7 +941,7 @@ function renderDone() {
 $('speakFront').addEventListener('click', e => {
   e.stopPropagation(); e.preventDefault();
   const d = DATA[queue[cur]];
-  if (d.audio) { playAudio(audioUrl(d.audio), $('speakFront'), d.en); }
+  if (d && d.en) playAudio(audioUrl(d.audio || ''), $('speakFront'), d.en);
 });
 
 // ---------- interactions ----------
@@ -1181,8 +1182,9 @@ function renderLearnCard() {
   $('wordFront').innerHTML = esc(d.en);
   $('wordFront').classList.toggle('long', String(d.en).length > 24);
   $('ipaText').textContent = d.ipa || '';
-  $('ipaFront').hidden = !d.ipa;
-  $('speakFront').hidden = !d.audio;
+  const canSpeak = !!(d.en && String(d.en).trim());
+  $('ipaFront').hidden = !d.ipa && !canSpeak;
+  $('speakFront').hidden = !canSpeak;
   $('tagFront').textContent = d.group || '自定义';
   // 状态角标
   const dot = $('knownDot');
@@ -1273,7 +1275,7 @@ $('speakFront').addEventListener('click', e => {
   e.stopPropagation(); e.preventDefault();
   if (session.cur >= session.queue.length) return;
   const d = ALL[indexOfId(currentId())];
-  if (d && d.audio) playAudio(audioUrl(d.audio), $('speakFront'), d.en);
+  if (d && d.en) playAudio(audioUrl(d.audio || ''), $('speakFront'), d.en);
 });
 document.onkeydown = e => {
   if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
@@ -1327,7 +1329,7 @@ function renderList(reset) {
     const id = idOf(i), d = ALL[i], c = getC(id);
     const dueTxt = c.s > 0 && c.due ? (c.due <= dstr() ? '待复习' : c.due.slice(5) + ' 到期') : '';
     return `<div class="lrow">
-      <button class="speak-btn" data-say="${i}" ${d.audio ? '' : 'hidden'} title="朗读">
+      <button class="speak-btn" data-say="${i}" ${d.en ? '' : 'hidden'} title="朗读">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
       </button>
       <span class="lw">${esc(d.en)}</span>
@@ -1345,7 +1347,7 @@ function renderList(reset) {
 }
 $('listRows').addEventListener('click', e => {
   const say = e.target.closest('[data-say]');
-  if (say) { const d = ALL[+say.dataset.say]; if (d.audio) playAudio(audioUrl(d.audio), say, d.en); return; }
+  if (say) { const d = ALL[+say.dataset.say]; if (d && d.en) playAudio(audioUrl(d.audio || ''), say, d.en); return; }
   const uw = e.target.closest('[data-unwrong]');
   if (uw) { const id = isNaN(+uw.dataset.unwrong) ? uw.dataset.unwrong : +uw.dataset.unwrong; wrongSet.delete(id); saveAll(); renderList(); return; }
   const tl = e.target.closest('[data-tolist]');
@@ -1565,8 +1567,8 @@ function renderQuizQ() {
   $('quizWord').innerHTML = esc(d.en);
   $('quizWord').classList.toggle('long', String(d.en).length > 24);
   $('quizIpaText').textContent = d.ipa || '';
-  $('quizIpa').hidden = !d.ipa && !d.audio;
-  $('quizSpeak').hidden = !d.audio;
+  $('quizIpa').hidden = !d.ipa && !d.en;
+  $('quizSpeak').hidden = !d.en;
   $('quizOpts').innerHTML = q.opts.map((z, i) =>
     `<button class="quiz-opt" data-i="${i}">${esc(z.length > 80 ? z.slice(0, 80) + '…' : z)}</button>`).join('');
   $('quizOpts').querySelectorAll('.quiz-opt').forEach(b => b.onclick = () => pickOpt(+b.dataset.i));
@@ -1623,7 +1625,7 @@ $('quizSpeak').addEventListener('click', e => {
   const q = quiz.qs[quiz.cur];      // 答完最后一题后 quiz.cur 会越界，需保护
   if (!q) return;
   const d = ALL[indexOfId(q.id)];
-  if (d && d.audio) playAudio(audioUrl(d.audio), $('quizSpeak'), d.en);
+  if (d && d.en) playAudio(audioUrl(d.audio || ''), $('quizSpeak'), d.en);
 });
 
 // ---------- 统计模块 ----------
